@@ -4,9 +4,9 @@ layout: base
 
 {% include header.html type="post" %}
 
-<div class="container-md">
+<div class="container-lg">
   <div class="row">
-    <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+    <div class="col-lg-12 col-xl-10 offset-xl-1">
 
       {% if page.gh-repo %}
         {% assign gh_split =  page.gh-repo | split:'/'  %}
@@ -30,6 +30,106 @@ layout: base
           {% endif %}
         </div>
       {% endif %}
+
+      {% assign gh_split = page.download | split:'/' %}
+      {% assign gh_user = gh_split[3] | downcase %}
+      {% assign gh_repo = gh_split[4] %}
+      <div class="row">
+        <div class="col-sm-6 col-md-4 item-detail">
+          <div class="item-image card d-flex align-items-center justify-content-center">
+            {% if page.thumbnail == '' or page.thumbnail == nil %}
+            <i class="fas fa-comments fa-10x text-info"></i>
+            {% else %}
+            <img class="card-img-top" src="{{ page.thumbnail }}" alt="{{ page.title }}" />
+            {% endif %}
+          </div>
+
+          {% comment %}
+          <div class="card-footer">
+            <small class="text-muted">Published on {{ page.date | date: date_format }}</small>
+          </div>
+          {% endcomment %}
+          
+        </div>
+
+        <div class="col-sm-6 col-md-8">
+          <strong>Author:</strong> {{ page.author }}
+      
+          {% if page.license == '' or page.license == nil %}
+            <br /><strong>License:</strong> <small class="text-muted">Unknown</small>
+          {% else %}
+            <br /><strong>License:</strong> {{ page.license }}
+          {% endif %}
+          <div class="d-block small text-muted">Published on {{ page.date | date: date_format }}</div>
+
+          
+          <div class="mt-3">
+            <div class="item-type {{ page.category | slugify }}"></div>
+            {% if gh_user == 'discourse' %}
+            <div class="item-type official"></div>
+            {% else %}
+            <div class="item-type thirdparty"></div>
+            {% endif %}
+            
+          </div>
+          
+        </div>
+
+        <div class="col-sm-12">
+          <nav class="theme-buttons btn-toolbar" role="toolbar" aria-label="Related links">
+            <div class="btn-group" role="group" aria-label="Discourse Extension Links">
+            {% if page.demo != '' and page.demo != nil %}
+              <a href="{{ page.demo }}" type="button" class="btn btn-primary">
+                <i class="fas fa-eye fa-inverse"></i> Preview
+              </a>
+            {% endif %}
+            {% if page.download %}
+              <a href="{{ page.download }}" type="button" class="btn btn-primary">
+                <i class="fas fa-download fa-inverse"></i> Repository
+              </a>
+            {% endif %}
+
+
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Discourse Meta Links">
+              <a href="https://meta.discourse.org/t/how-do-i-install-a-theme-or-theme-component/63682" type="button" class="btn btn-success">
+                <i class="fas fa-book"></i> Installation Guide
+              </a>
+              <a href="https://meta.discourse.org/t/{{ page.meta_topic_id }}" type="button" class="btn btn-success">
+                <i class="fab fa-discourse"></i> Meta Topic
+              </a>
+            </div>
+            
+            <div class="btn-group" role="group" aria-label="Discourse Meta Links">
+              {% if page.homepage != '' and page.homepage != nil %}
+              {% assign homepage = page.download %}
+              {% endif %}
+              {% if homepage %}
+                <a href="{{ homepage }}" type="button" class="btn btn-info">
+                  <i class="fas fa-home"></i> Homepage
+                </a>
+              {% endif %}
+
+              {% if page.license != '' and page.license != nil %}
+                {% if page.license_link == '' or page.license_link == nil %}
+                  {% assign license_link = page.download | append: '/blob/master/LICENSE' %}
+                {% else %}
+                  {% assign license_link = page.license_link %}
+                {% endif %}
+                {% if license_link %}
+                  <a href="{{ license_link }}" type="button" class="btn btn-info">
+                    <i class="fas fa-balance-scale"></i> License
+                  </a>
+                {% endif %}
+              {% endif %}
+            </div>
+          </nav>
+        </div>
+
+      </div>
+
+    
 
       <article role="main" class="blog-post">
         {{ content }}
@@ -55,12 +155,12 @@ layout: base
       <ul class="pagination blog-pager">
         {% if page.previous.url %}
         <li class="page-item previous">
-          <a class="page-link" href="{{ page.previous.url | relative_url }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">&larr; Previous Post</a>
+          <a class="page-link" href="{{ page.previous.url | relative_url }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">&larr; Previous</a>
         </li>
         {% endif %}
         {% if page.next.url %}
         <li class="page-item next">
-          <a class="page-link" href="{{ page.next.url | relative_url }}" data-toggle="tooltip" data-placement="top" title="{{page.next.title}}">Next Post &rarr;</a>
+          <a class="page-link" href="{{ page.next.url | relative_url }}" data-toggle="tooltip" data-placement="top" title="{{page.next.title}}">Next &rarr;</a>
         </li>
         {% endif %}
       </ul>
